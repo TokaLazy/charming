@@ -63,6 +63,18 @@ test('can inject custom tags', function (t) {
   )
 })
 
+test('can inject spans around words', function (t) {
+  t.plan(1)
+  const elem = createElement('foo bar')
+  charming(elem, {
+    splitWords: true
+  })
+  t.equal(
+    elem.innerHTML,
+    '<span class="word1">foo</span> <span class="word2">bar</span>'
+  )
+})
+
 test('can inject spans without classes', function (t) {
   t.plan(1)
   const elem = createElement('foo')

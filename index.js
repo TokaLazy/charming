@@ -1,13 +1,21 @@
+var SPACE_REGEX = /\s/
+
 module.exports = function (element, options) {
   options = options || {}
 
   var tagName = options.tagName || 'span'
-  var classPrefix = options.classPrefix != null ? options.classPrefix : 'char'
+  var splitWords = options.splitWords
+  var classPrefix =
+    options.classPrefix != null
+      ? options.classPrefix
+      : splitWords ? 'word' : 'char'
   var count = 1
 
   function inject (element) {
     var parentNode = element.parentNode
-    var string = element.nodeValue
+    var string = splitWords
+      ? element.nodeValue.split(SPACE_REGEX)
+      : element.nodeValue
     var length = string.length
     var i = -1
     while (++i < length) {
@@ -17,6 +25,9 @@ module.exports = function (element, options) {
         count++
       }
       node.appendChild(document.createTextNode(string[i]))
+      if (splitWords && i !== 0) {
+        parentNode.insertBefore(document.createTextNode(' '), element)
+      }
       parentNode.insertBefore(node, element)
     }
     parentNode.removeChild(element)
